@@ -2,10 +2,10 @@
   "name": "luxvm-desktop",
   "private": true,
   "version": "1.0.0",
-  "type": "module",
+  "main": "electron/main.ts",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && electron-builder"
+    "build": "tsc && vite build"
   },
   "dependencies": {
     "clsx": "^2.1.0",
