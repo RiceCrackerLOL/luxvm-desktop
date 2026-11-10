@@ -18,16 +18,13 @@ jobs:
           node-version: 20
 
       - name: Install Dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
 
-      - name: Build Web Assets
-        run: npm run build --if-present
-
-      - name: Package Desktop Executable
-        run: npx electron-builder --windows
+      - name: Build Executable
+        run: npm run build
 
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v4
         with:
           name: LuxVM-Windows-Setup
-          path: dist/*.exe
+          path: release/*.exe
