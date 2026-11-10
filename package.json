@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "main": "dist-electron/main.js",
   "scripts": {
-    "build": "tsc --noEmit && vite build && electron-builder"
+    "build": "tsc && vite build && electron-builder"
   },
   "dependencies": {
     "clsx": "^2.1.0",
