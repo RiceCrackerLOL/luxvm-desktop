@@ -28,6 +28,6 @@ jobs:
         with:
           name: LuxVM-Windows-App
           path: |
-            release/win-unpacked/
-            release/*.exe
-            release/*.zip
+            dist/
+            dist-electron/
+            release/
