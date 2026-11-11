@@ -17,17 +17,35 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Dependencies
+      - name: Install Project Dependencies
         run: npm install
 
-      - name: Execute Production Build and Electron Packaging
+      - name: Run Production Build and Package Executable
         run: npm run build
+
+      - name: Verify Generated Output Directories
+        run: |
+          Write-Host "Verifying workspace folders after build:"
+          if (Test-Path "release") { 
+            Write-Host "Found release/ folder:"
+            Get-ChildItem -Recurse release 
+          } else { 
+            Write-Host "release/ folder not found." 
+          }
+          
+          if (Test-Path "dist") { 
+            Write-Host "Found dist/ folder:"
+            Get-ChildItem -Recurse dist 
+          } else { 
+            Write-Host "dist/ folder not found." 
+          }
 
       - name: Upload Windows Standalone App Artifact
         uses: actions/upload-artifact@v4
         with:
           name: LuxVM-Windows-App
           path: |
+            release/
             dist/
             dist-electron/
-            release/
+          if-no-files-found: warn
