@@ -8,10 +8,6 @@ jobs:
   build:
     runs-on: windows-latest
 
-    strategy:
-      matrix:
-        node-version: [20]
-
     steps:
       - name: Checkout Repository Code
         uses: actions/checkout@v4
@@ -19,36 +15,13 @@ jobs:
       - name: Setup Node.js Environment
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          node-version: 20
 
-      - name: Display Environment & Node Information
-        run: |
-          node -v
-          npm -v
-          Get-Location
-
-      - name: Clean Install Project Dependencies
-        run: |
-          npm ci || npm install
+      - name: Install Dependencies
+        run: npm install
 
       - name: Execute Production Build and Electron Packaging
-        run: |
-          npm run build
-
-      - name: Inspect Workspace Directory Tree for Artifact Verification
-        run: |
-          Write-Host "Checking root contents:"
-          Get-ChildItem -Force
-          
-          Write-Host "Checking release folder contents if present:"
-          if (Test-Path "release") { Get-ChildItem -Recurse release } else { Write-Host "release folder not found." }
-
-          Write-Host "Checking dist folder contents if present:"
-          if (Test-Path "dist") { Get-ChildItem -Recurse dist } else { Write-Host "dist folder not found." }
-
-          Write-Host "Checking dist-electron folder contents if present:"
-          if (Test-Path "dist-electron") { Get-ChildItem -Recurse dist-electron } else { Write-Host "dist-electron folder not found." }
+        run: npm run build
 
       - name: Upload Windows Standalone App Artifact
         uses: actions/upload-artifact@v4
@@ -58,5 +31,3 @@ jobs:
             release/win-unpacked/
             release/*.exe
             release/*.zip
-          if-no-files-found: error
-          compression-level: 9
