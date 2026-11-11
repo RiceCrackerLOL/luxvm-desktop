@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "main": "dist-electron/main.js",
   "scripts": {
-    "build": "vite build && electron-builder --win --dir"
+    "build": "vite build && electron-builder --win --x64"
   },
   "dependencies": {
     "clsx": "^2.1.0",
