@@ -22,6 +22,8 @@ jobs:
 
       - name: Execute Production Build and Electron Packaging
         run: npm run build
+        env:
+          DEBUG: electron-builder
 
       - name: Upload Windows Standalone App Artifact
         uses: actions/upload-artifact@v4
