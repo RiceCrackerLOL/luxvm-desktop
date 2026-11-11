@@ -27,4 +27,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: LuxVM-Windows-App
-          path: release/win-unpacked/
+          path: |
+            release/**
+            dist/**
+            dist-electron/**
