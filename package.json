@@ -3,9 +3,26 @@
   "private": true,
   "version": "1.0.0",
   "main": "dist-electron/main.js",
+  "author": "LuxVM",
+  "description": "LuxVM Desktop AI Messenger",
   "scripts": {
     "dev": "vite",
     "build": "vite build && electron-builder --win --dir"
+  },
+  "build": {
+    "appId": "com.luxvm.desktop",
+    "productName": "LuxVM",
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": "dir"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "package.json"
+    ]
   },
   "dependencies": {
     "clsx": "^2.1.0",
