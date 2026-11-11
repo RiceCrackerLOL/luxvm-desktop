@@ -11,7 +11,11 @@ import {
   Layers,
   Palette,
   Paperclip,
-  ArrowUpIcon
+  ArrowUpIcon,
+  CircleUserRound,
+  MonitorIcon,
+  FileUp,
+  ImageIcon
 } from "lucide-react";
 
 interface Message {
@@ -31,10 +35,10 @@ interface ApiProfile {
 const DEFAULT_PROFILES: ApiProfile[] = [
   {
     id: '1',
-    name: 'OpenAI Default',
+    name: 'Google Gemini',
     key: '',
-    baseUrl: 'https://api.openai.com/v1/chat/completions',
-    model: 'gpt-4o-mini'
+    baseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
+    model: 'gemini-2.5-flash'
   },
   {
     id: '2',
@@ -137,7 +141,7 @@ export default function App() {
           'Authorization': `Bearer ${activeProfile.key.trim()}`
         },
         body: JSON.stringify({
-          model: activeProfile.model.trim() || 'gpt-4o-mini',
+          model: activeProfile.model.trim() || 'gemini-2.5-flash',
           messages: apiMessages,
         }),
       });
@@ -156,7 +160,7 @@ export default function App() {
         { 
           id: Date.now().toString(), 
           sender: 'ai', 
-          text: `LuxVM Error: ${err.message || 'Failed to reach endpoint. Check your Base URL and API Key.'}` 
+          text: `LuxVM Error: ${err.message || 'Failed to reach endpoint.'}` 
         }
       ]);
     } finally {
@@ -235,15 +239,15 @@ export default function App() {
         </div>
       </div>
 
-      {/* Chat Messages */}
+      {/* Chat Messages / Empty State */}
       <div className="flex-1 w-full max-w-3xl flex flex-col items-center justify-center overflow-y-auto px-4 space-y-4 my-auto">
         {messages.length === 0 ? (
           <div className="text-center">
             <h1 className="text-4xl font-semibold text-white drop-shadow-sm">
-              LuxVM AI
+              Ruixen AI
             </h1>
-            <p className="mt-2 text-neutral-300 text-sm">
-              Universal custom endpoints unlocked — start chatting or select a quick action below.
+            <p className="mt-2 text-neutral-200">
+              Build something amazing — just start typing below.
             </p>
           </div>
         ) : (
@@ -276,8 +280,8 @@ export default function App() {
         )}
       </div>
 
-      {/* Input Dock */}
-      <div className="w-full max-w-3xl mb-8 px-4">
+      {/* Input Box Section */}
+      <div className="w-full max-w-3xl mb-[15vh] px-4">
         <div className="relative bg-black/60 backdrop-blur-md rounded-xl border border-neutral-700 shadow-2xl">
           <textarea
             ref={textareaRef}
@@ -292,36 +296,42 @@ export default function App() {
                 handleSend();
               }
             }}
-            placeholder="Ask LuxVM anything..."
+            placeholder="Type your request..."
             className="w-full px-4 py-3 resize-none border-none bg-transparent text-white text-sm focus:outline-none placeholder:text-neutral-400 min-h-[48px]"
             style={{ overflow: "hidden" }}
           />
 
+          {/* Footer Buttons */}
           <div className="flex items-center justify-between p-3 border-t border-neutral-800/50">
-            <button className="text-neutral-400 hover:text-white transition">
+            <button className="text-neutral-400 hover:text-white transition p-1 rounded-md hover:bg-neutral-800">
               <Paperclip className="w-4 h-4" />
             </button>
 
             <button
               onClick={() => handleSend()}
               disabled={!input.trim()}
-              className={`flex items-center gap-1 p-2 rounded-lg transition-colors ${
+              className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors ${
                 input.trim() 
                   ? "bg-indigo-600 text-white hover:bg-indigo-500" 
                   : "bg-neutral-800 text-neutral-500 cursor-not-allowed"
               }`}
             >
               <ArrowUpIcon className="w-4 h-4" />
+              <span className="sr-only">Send</span>
             </button>
           </div>
         </div>
 
-        {/* Quick Action Chips */}
-        <div className="flex items-center justify-center flex-wrap gap-2 mt-4">
+        {/* Quick Actions */}
+        <div className="flex items-center justify-center flex-wrap gap-3 mt-6">
           <QuickAction icon={<Code2 className="w-4 h-4" />} label="Generate Code" onClick={() => handleSend("Generate a clean React component")} />
           <QuickAction icon={<Rocket className="w-4 h-4" />} label="Launch App" onClick={() => handleSend("How do I structure a full-stack web application?")} />
           <QuickAction icon={<Layers className="w-4 h-4" />} label="UI Components" onClick={() => handleSend("Show me modern UI component layouts")} />
           <QuickAction icon={<Palette className="w-4 h-4" />} label="Theme Ideas" onClick={() => handleSend("Suggest a color palette for a dark mode app")} />
+          <QuickAction icon={<CircleUserRound className="w-4 h-4" />} label="User Dashboard" onClick={() => handleSend("Create a user dashboard layout")} />
+          <QuickAction icon={<MonitorIcon className="w-4 h-4" />} label="Landing Page" onClick={() => handleSend("Design a high-converting landing page")} />
+          <QuickAction icon={<FileUp className="w-4 h-4" />} label="Upload Docs" onClick={() => handleSend("How do I parse and handle uploaded files?")} />
+          <QuickAction icon={<ImageIcon className="w-4 h-4" />} label="Image Assets" onClick={() => handleSend("Recommend image assets and generation prompts")} />
         </div>
       </div>
 
@@ -411,7 +421,7 @@ export default function App() {
                               updated[index].key = e.target.value;
                               setEditingProfiles(updated);
                             }}
-                            placeholder="gsk_... or sk-..."
+                            placeholder="API Key..."
                             className="w-full bg-neutral-900 border border-neutral-800 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                           />
                         </div>
@@ -426,7 +436,7 @@ export default function App() {
                               updated[index].model = e.target.value;
                               setEditingProfiles(updated);
                             }}
-                            placeholder="e.g. llama-3.3-70b-versatile or gpt-4o"
+                            placeholder="e.g. gemini-2.5-flash"
                             className="w-full bg-neutral-900 border border-neutral-800 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                           />
                         </div>
@@ -442,7 +452,7 @@ export default function App() {
                             updated[index].baseUrl = e.target.value;
                             setEditingProfiles(updated);
                           }}
-                          placeholder="https://api.groq.com/openai/v1/chat/completions"
+                          placeholder="https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
                           className="w-full bg-neutral-900 border border-neutral-800 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-indigo-500 font-mono text-[11px]"
                         />
                       </div>
@@ -493,7 +503,7 @@ function QuickAction({ icon, label, onClick }: { icon: React.ReactNode; label: s
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-neutral-800 bg-black/50 text-neutral-300 hover:text-white hover:bg-neutral-800 text-xs transition"
+      className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-neutral-700 bg-black/50 text-neutral-300 hover:text-white hover:bg-neutral-700 text-xs transition"
     >
       {icon}
       <span>{label}</span>
