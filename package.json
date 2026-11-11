@@ -3,26 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "main": "dist-electron/main.js",
-  "author": "LuxVM",
-  "description": "LuxVM Desktop AI Messenger",
   "scripts": {
     "dev": "vite",
     "build": "vite build && electron-builder --win --dir"
-  },
-  "build": {
-    "appId": "com.luxvm.desktop",
-    "productName": "LuxVM",
-    "directories": {
-      "output": "release"
-    },
-    "win": {
-      "target": "dir"
-    },
-    "files": [
-      "dist/**/*",
-      "dist-electron/**/*",
-      "package.json"
-    ]
   },
   "dependencies": {
     "clsx": "^2.1.0",
@@ -46,69 +29,3 @@
     "vite-plugin-electron-renderer": "^0.14.5"
   }
 }
-```[cite: 13]
-
----
-
-### 2. Update `.github/workflows/build.yml`
-Open your `.github/workflows/build.yml` file and replace it with this workflow to build and upload the unpacked artifacts from the `release/win-unpacked/` directory:
-
-```yaml
-name: Build LuxVM Desktop App
-
-on:
-  push:
-    branches: [ main, master ]
-
-jobs:
-  build:
-    runs-on: windows-latest
-
-    steps:
-      - name: Checkout Repository Code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js Environment
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Execute Production Build and Packaging
-        run: npm run build
-
-      - name: Upload Windows Standalone App Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: LuxVM-Windows-App
-          path: release/win-unpacked/
-          if-no-files-found: error
-```[cite: 13]
-
----
-
-### Step-by-Step Execution Guide
-
-<Steps>
-<Step subtitle="1 min" title="Commit Updated Files">
-Commit both the updated `package.json` and `.github/workflows/build.yml` files directly to your main branch on GitHub.
-*Verification:* The GitHub Actions tab automatically starts a new workflow run.
-</Step>
-
-<Step subtitle="1-2 min" title="Monitor the Workflow Run">
-Navigate to the **Actions** tab in your repository and click on the active workflow run to watch its progress.
-*Verification:* All steps complete successfully with green checkmarks.
-</Step>
-
-<Step subtitle="30 sec" title="Download and Launch App">
-Scroll down to the **Artifacts** section of the completed run summary, download `LuxVM-Windows-App`, extract the archive, and double-click **luxvm-desktop.exe** inside the folder.
-*Verification:* The LuxVM desktop application launches smoothly without errors.
-</Step>
-</Steps>
-
-<ElicitationsGroup message="If you run into any issues during this build:">
-  <Elicitation label="Build failed with red X" query="The workflow run failed with a red X. What error message is shown in the build logs?"/>
-  <Elicitation label="App opens to a blank screen" query="The executable launched, but the window is blank. How do I fix the React load path?"/>
-</ElicitationsGroup>
