@@ -20,14 +20,12 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Execute Production Build and Electron Packaging
+      - name: Execute Production Build and Packaging
         run: npm run build
-        env:
-          DEBUG: electron-builder
 
       - name: Upload Windows Standalone App Artifact
         uses: actions/upload-artifact@v4
         with:
           name: LuxVM-Windows-App
-          path: dist/win-unpacked/
+          path: release/win-unpacked/
           if-no-files-found: error
